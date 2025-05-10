@@ -1,1 +1,44 @@
-*.env
+# WordPress Core (if you're managing it directly - adjust if not)
+wordpress/wp-admin/
+wordpress/wp-includes/
+wordpress/*.php
+!wordpress/wp-config-sample.php
+!wordpress/index.php
+
+# wp-content directory (keep themes and plugins, ignore uploads and cache)
+wp-content/uploads/
+wp-content/upgrade/
+wp-content/cache/
+wp-content/w3tc-config/
+wp-content/advanced-cache.php
+wp-content/object-cache.php
+wp-content/.htaccess
+wp-content/et-temp/  # Example for Elegant Themes temp folder
+wp-content/**/node_modules/ # Ignore node_modules in themes/plugins
+wp-content/**/package-lock.json # Ignore package-lock.json in themes/plugins
+
+# Docker related files (ignore environment-specific data)
+docker-compose.override.yml
+.env
+db_data/  # Ignore the MySQL data volume content
+wordpress_files/ # Ignore the WordPress core volume content (if you used a named volume)
+
+# Local development environment specific
+.DS_Store
+Thumbs.db
+*.log
+*.local
+*.swp
+*.swo
+.vscode/ # If you're using VS Code
+.idea/   # If you're using IntelliJ IDEA
+npm-debug.log
+yarn-error.log
+
+# Composer related (if you're using Composer in themes/plugins)
+composer.lock
+vendor/
+
+# Other temporary or generated files
+*.backup
+*.tmp
