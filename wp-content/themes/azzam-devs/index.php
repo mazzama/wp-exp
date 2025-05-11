@@ -3,9 +3,6 @@
 <div id="content" class="site-content">
     <div id="primary" class="content-area">
         <main id="main" class="site-main">
-            <h1>
-                Blog
-            </h1>
             <section class="home-blog">
                 <div class="container">
                     <div class="blog-items">\
@@ -14,7 +11,7 @@
                             while (have_posts()): the_post();
                         ?>
                                 <article>
-                                    <h2><?php the_title(); ?></h2>
+                                    <h2><a href="<?php the_permalink(); ?>"><?php the_title(); ?></h2>
                                     <?php if (has_post_thumbnail()) : ?>
                                             <!-- <?php the_post_thumbnail( 'full' ); ?> -->
                                             <?php the_post_thumbnail( array(275, 275) ); ?>
@@ -24,7 +21,7 @@
                                         <p>Categories: <?php the_category(', '); ?></p>
                                         <p>Tags: <?php the_tags(', ') ?></p>
                                     </div>
-                                    <?php the_content(); ?>
+                                    <?php the_excerpt(); ?>
                                 </article>
                             <?php
                             endwhile;
