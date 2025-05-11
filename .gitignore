@@ -42,3 +42,5 @@ vendor/
 # Other temporary or generated files
 *.backup
 *.tmp
+
+wp-content1/
