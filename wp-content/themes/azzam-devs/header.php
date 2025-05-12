@@ -23,7 +23,7 @@
                         <?php endif; ?>
                     </div>
                     <div class="searchbox">
-                        Search Box
+                        <?php get_search_form(); ?>
                     </div>
                 </div>
             </section>
