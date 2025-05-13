@@ -1,82 +1,89 @@
 <?php get_header(); ?>
-<div id="content" class="site-content">
-    <div id="primary" class="content-area">
-        <main id="main" class="site-main">
-            <?php 
-                $hero_title = get_theme_mod('sec_hero_title', 'Please, type some title'); 
-                $hero_subtitle = get_theme_mod('sec_hero_subtitle', 'Please, type some subtitle');
-                $hero_button_text = get_theme_mod('sec_hero_button_text', 'Learn More');
-                $hero_button_link = get_theme_mod('sec_hero_button_link', '#');
-                $hero_height = get_theme_mod('sec_hero_height', '800px');
-                
-                $hero_background = wp_get_attachment_url(get_theme_mod('sec_hero_image_background'));
-            ?>
+        <div id="content" class="site-content">
+            <div id="primary" class="content-area">
+                <main id="main" class="site-main">
+                    <?php 
+                    $hero_title = get_theme_mod( 'set_hero_title', 'Please, type some title' );
+                    $hero_subtitle = get_theme_mod( 'set_hero_subtitle', 'Please, type some subtitle' );
+                    $hero_button_link = get_theme_mod( 'set_hero_button_link', '#' );
+                    $hero_button_text = get_theme_mod( 'set_hero_button_text', 'Learn More' );
+                    $hero_height = get_theme_mod( 'set_hero_height', 800 );
+                    $hero_bg_id = get_theme_mod( 'set_hero_image_background' );
+                    $hero_background = '';
 
-            <section class="hero" style="background-image: url('<?php echo $hero_background ?>')">
-                <div class="overlay" style="min-height: <?php echo $hero_height?>px;">
-                    <div class="container">
-                        <div class="hero-items">
-                            <h1><?php echo $hero_title ?></h1>
-                            <p><?php echo $hero_subtitle ?></p>
-                            <a href="<?php $hero_button_text?>" class="btn"><?php $hero_button_text ?></a>
+                    if ($hero_bg_id) {
+                        $hero_background_data = wp_get_attachment_image_src( $hero_bg_id, 'full' ); // Get image URL and other data
+                        if ($hero_background_data && isset($hero_background_data[0])) {
+                            $hero_background = esc_url($hero_background_data[0]); // Extract the URL
+                        }
+                    }
+                    ?>
+                    <section class="hero" style="background-image: url('<?php echo $hero_bg_id ?>');">
+                        <div class="overlay" style="min-height: <?php echo $hero_height ?>px">
+                            <div class="container">
+                                <div class="hero-items">
+                                    <h1><?php echo $hero_title; ?></h1>
+                                    <p><?php echo nl2br( $hero_subtitle ); ?></p>
+                                    <a href="<?php echo $hero_button_link ?>"><?php echo $hero_button_text; ?></a>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </section>
+                    <section class="services">
+                        <h2>Services</h2>
+                        <div class="container">
+                            <div class="services-item">
+                                <?php 
+                                    if( is_active_sidebar( 'services-1' )){
+                                        dynamic_sidebar( 'services-1' );
+                                    }
+                                ?>
+                            </div>
+                            <div class="services-item">
+                                <?php 
+                                    if( is_active_sidebar( 'services-2' )){
+                                        dynamic_sidebar( 'services-2' );
+                                    }
+                                ?>
+                            </div>
+                            <div class="services-item">
+                                <?php 
+                                    if( is_active_sidebar( 'services-3' )){
+                                        dynamic_sidebar( 'services-3' );
+                                    }
+                                ?>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="home-blog">
+                        <h2>Latest News</h2>
+                        <div class="container">
+                            <?php 
 
-                </div>
-            </section>>
+                            $per_page = get_theme_mod( 'set_per_page', 3 );
+                            $category_include = get_theme_mod( 'set_category_include');
+                            $category_exclude = get_theme_mod( 'set_category_exclude');
 
-            </section>
-            <section class="services">
-                <h2>Services</h2>
-                <div class="container">
-                    <div class="services-item">
-                        <?php
-                        if (is_active_sidebar('services-1')) {
-                            dynamic_sidebar('services-1');
-                        }
-                        ?>
-                    </div>
-                    <div class="services-item">
-                        <?php
-                        if (is_active_sidebar('services-2')) {
-                            dynamic_sidebar('services-2');
-                        }
-                        ?>
-                    </div>
-                    <div class="services-item">
-                        <?php
-                        if (is_active_sidebar('services-3')) {
-                            dynamic_sidebar('services-3');
-                        }
-                        ?>
-                    </div>
-                </div>
-            </section>
-            <section class="home-blog">
-                <h2>Latest News</h2>
-                <div class="container">
-                    <?php
+                            $args = array(
+                                'post_type' => 'post',
+                                'posts_per_page' => $per_page,
+                                'category__in'  => explode( ',', $category_include ),
+                                'category__not_in' => explode( ',', $category_exclude )
+                            );
 
-                    $args = array(
-                        'post_type' => 'post',
-                        'posts_per_page' => 3,
-                        'category__in'  => array(5, 8, 9),
-                        'category__not_in' => array(1)
-                    );
+                            $postlist = new WP_Query( $args );
 
-                    $postlist = new WP_Query($args);
-
-                    if ($postlist->have_posts()):
-                        while ($postlist->have_posts()) : $postlist->the_post();
-                            get_template_part('parts/content', 'latest-news');
-                        endwhile;
-                        wp_reset_postdata();
-                    else: ?>
-                        <p>Nothing yet to be displayed!</p>
-                    <?php endif; ?>
-                </div>
-            </section>
-        </main>
-    </div>
-</div>
+                                if( $postlist->have_posts() ):
+                                    while( $postlist->have_posts() ) : $postlist->the_post();
+                                    get_template_part( 'parts/content', 'latest-news' );
+                                    endwhile;
+                                    wp_reset_postdata();
+                                else: ?>
+                                    <p>Nothing yet to be displayed!</p>
+                            <?php endif; ?>                                
+                        </div>
+                    </section>
+                </main>
+            </div>
+        </div>
 <?php get_footer(); ?>
